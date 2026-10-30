@@ -1,0 +1,60 @@
+INSERT INTO exercises (name, muscle_group, movement_pattern, equipment, is_compound, instructions) VALUES
+-- SQUAT pattern (legs)
+('Barbell Back Squat', 'QUADS', 'SQUAT', 'BARBELL', TRUE, 'Rest the bar across your upper back, feet shoulder-width apart. Brace your core, sit down until your thighs are about parallel to the floor, then drive back up.'),
+('Leg Press', 'QUADS', 'SQUAT', 'MACHINE', TRUE, 'Sit with your back flat against the pad and feet shoulder-width on the platform. Lower the platform under control, then press it away without locking your knees hard.'),
+('Bodyweight Squat', 'QUADS', 'SQUAT', 'BODYWEIGHT', TRUE, 'Stand with feet shoulder-width apart and arms out in front. Sit your hips back and down, keep your chest up, then stand back up.'),
+('Dumbbell Reverse Lunge', 'QUADS', 'SQUAT', 'DUMBBELL', TRUE, 'Hold a dumbbell in each hand. Step one foot back and lower until both knees are bent about 90 degrees, then push through the front foot to return.'),
+('Dumbbell Step-Up', 'QUADS', 'SQUAT', 'DUMBBELL', TRUE, 'Hold a dumbbell in each hand and place one foot fully on a bench or box. Stand up using that leg, then lower back down slowly.'),
+('Smith Machine Squat', 'QUADS', 'SQUAT', 'MACHINE', TRUE, 'Set the bar on your upper back with your feet slightly in front of the bar. Lower until your thighs are about parallel, then stand up along the fixed path.'),
+('Hack Squat', 'QUADS', 'SQUAT', 'MACHINE', TRUE, 'Stand on the platform with your back and shoulders against the pad. Lower with control until your thighs are about parallel, then press back up.'),
+('Leg Extension', 'QUADS', 'SQUAT', 'MACHINE', FALSE, 'Sit with the pad resting on your lower shins. Straighten your legs until they are almost fully extended, pause briefly, then lower slowly.'),
+('Standing Calf Raise', 'CALVES', 'SQUAT', 'MACHINE', FALSE, 'Place the balls of your feet on the platform with the pads on your shoulders. Rise as high as you can on your toes, pause, then lower until you feel a stretch.'),
+('Seated Calf Raise', 'CALVES', 'SQUAT', 'MACHINE', FALSE, 'Sit with the pads on your lower thighs and the balls of your feet on the platform. Lift your heels as high as you can, pause, then lower slowly.'),
+('Bodyweight Calf Raise', 'CALVES', 'SQUAT', 'BODYWEIGHT', FALSE, 'Stand tall, holding a wall or rail for balance if needed. Rise onto your toes, pause at the top, then lower slowly.'),
+
+-- HINGE pattern (hamstrings, glutes, lower back)
+('Romanian Deadlift', 'HAMSTRINGS', 'HINGE', 'BARBELL', TRUE, 'Hold the bar at hip height with a slight bend in your knees. Push your hips back while the bar slides down your thighs, keep your back flat, then squeeze your glutes to stand.'),
+('Barbell Deadlift', 'HAMSTRINGS', 'HINGE', 'BARBELL', TRUE, 'Stand with the bar over your mid-foot and grip it just outside your legs. Brace your core, keep your back flat, and push the floor away until you stand tall.'),
+('Barbell Hip Thrust', 'GLUTES', 'HINGE', 'BARBELL', TRUE, 'Sit with your upper back against a bench and the bar across your hips. Drive your hips up until your body forms a straight line, squeeze, then lower.'),
+('Glute Bridge', 'GLUTES', 'HINGE', 'BODYWEIGHT', TRUE, 'Lie on your back with knees bent and feet flat. Push through your heels to lift your hips, squeeze your glutes at the top, then lower.'),
+('Cable Pull-Through', 'GLUTES', 'HINGE', 'CABLE', TRUE, 'Face away from a low cable and hold the rope between your legs. Push your hips back, then drive them forward and squeeze your glutes to stand tall.'),
+('Lying Leg Curl', 'HAMSTRINGS', 'HINGE', 'MACHINE', FALSE, 'Lie face down with the pad just above your heels. Curl your heels toward your glutes, pause, then lower slowly.'),
+('Seated Leg Curl', 'HAMSTRINGS', 'HINGE', 'MACHINE', FALSE, 'Sit with the pad on your lower calves and the thigh pad snug. Curl your heels back and down, pause, then return slowly.'),
+('Back Extension', 'BACK', 'HINGE', 'BODYWEIGHT', FALSE, 'Set the pad at hip height and cross your arms. Lower your torso with a straight back, then lift until your body forms a straight line.'),
+('Cable Glute Kickback', 'GLUTES', 'HINGE', 'CABLE', FALSE, 'Attach the ankle strap and hold the frame for support. Kick one leg straight back, squeeze your glute, then return slowly.'),
+
+-- PUSH pattern (chest, shoulders, triceps)
+('Barbell Bench Press', 'CHEST', 'PUSH', 'BARBELL', TRUE, 'Lie on a bench with feet flat and grip the bar slightly wider than shoulder-width. Lower it to your mid-chest, then press it back up over your shoulders.'),
+('Dumbbell Bench Press', 'CHEST', 'PUSH', 'DUMBBELL', TRUE, 'Lie on a bench holding a dumbbell in each hand over your chest. Lower them to the sides of your chest, then press them back up.'),
+('Incline Dumbbell Press', 'CHEST', 'PUSH', 'DUMBBELL', TRUE, 'Set a bench to a low incline and hold the dumbbells at chest height. Press them up and slightly together, then lower with control.'),
+('Push-Up', 'CHEST', 'PUSH', 'BODYWEIGHT', TRUE, 'Place your hands slightly wider than your shoulders with your body in a straight line. Lower your chest toward the floor, then push back up.'),
+('Incline Push-Up', 'CHEST', 'PUSH', 'BODYWEIGHT', TRUE, 'Place your hands on a bench or sturdy bar with your body in a straight line. Lower your chest to the edge, then push back up.'),
+('Cable Chest Fly', 'CHEST', 'PUSH', 'CABLE', FALSE, 'Stand between two high pulleys with a slight bend in your elbows. Bring your hands together in front of your chest in a wide arc, then open slowly.'),
+('Pec Deck', 'CHEST', 'PUSH', 'MACHINE', FALSE, 'Sit with your back flat and your forearms on the pads. Bring your arms together in front of you, squeeze, then open slowly.'),
+('Dumbbell Shoulder Press', 'SHOULDERS', 'PUSH', 'DUMBBELL', TRUE, 'Sit or stand with the dumbbells at shoulder height. Press them overhead until your arms are straight, then lower with control.'),
+('Machine Shoulder Press', 'SHOULDERS', 'PUSH', 'MACHINE', TRUE, 'Adjust the seat so the handles start at shoulder height. Press up until your arms are almost straight, then lower slowly.'),
+('Barbell Overhead Press', 'SHOULDERS', 'PUSH', 'BARBELL', TRUE, 'Hold the bar at shoulder height with your core and glutes tight. Press it straight overhead, moving your head through, then lower it back to your shoulders.'),
+('Dumbbell Lateral Raise', 'SHOULDERS', 'PUSH', 'DUMBBELL', FALSE, 'Hold light dumbbells at your sides with a slight bend in your elbows. Raise your arms out to shoulder height, then lower slowly.'),
+('Triceps Pushdown', 'TRICEPS', 'PUSH', 'CABLE', FALSE, 'Stand at a high cable with your elbows pinned to your sides. Push the bar down until your arms are straight, then let it rise slowly.'),
+('Overhead Dumbbell Triceps Extension', 'TRICEPS', 'PUSH', 'DUMBBELL', FALSE, 'Hold one dumbbell with both hands overhead. Bend your elbows to lower it behind your head, then straighten your arms.'),
+
+-- PULL pattern (back, rear shoulders, biceps)
+('Lat Pulldown', 'BACK', 'PULL', 'CABLE', TRUE, 'Sit with your thighs under the pads and grip the bar wider than your shoulders. Pull it to your upper chest by driving your elbows down, then return slowly.'),
+('One-Arm Dumbbell Row', 'BACK', 'PULL', 'DUMBBELL', TRUE, 'Support one hand and knee on a bench with a flat back. Pull the dumbbell toward your hip, then lower it with control.'),
+('Barbell Bent-Over Row', 'BACK', 'PULL', 'BARBELL', TRUE, 'Hinge forward with a flat back and the bar hanging below your shoulders. Pull it to your lower ribs, then lower slowly.'),
+('Chest-Supported Machine Row', 'BACK', 'PULL', 'MACHINE', TRUE, 'Rest your chest on the pad and grab the handles. Pull your elbows back and squeeze your shoulder blades, then return slowly.'),
+('Assisted Pull-Up', 'BACK', 'PULL', 'MACHINE', TRUE, 'Select an assistance weight and kneel on the pad. Pull your chest toward the bar by driving your elbows down, then lower with control.'),
+('Straight-Arm Pulldown', 'BACK', 'PULL', 'CABLE', FALSE, 'Stand at a high cable with straight arms and a slight hip hinge. Push the bar down to your thighs, then raise it slowly.'),
+('Face Pull', 'BACK', 'PULL', 'CABLE', FALSE, 'Set a rope at upper-chest height and step back. Pull it toward your face with your elbows high, then return slowly.'),
+('Reverse Pec Deck', 'SHOULDERS', 'PULL', 'MACHINE', FALSE, 'Sit facing the pad and hold the handles with your arms out in front. Sweep your arms back in a wide arc, then return slowly.'),
+('Dumbbell Biceps Curl', 'BICEPS', 'PULL', 'DUMBBELL', FALSE, 'Stand with a dumbbell in each hand and your elbows at your sides. Curl the weights up without swinging, then lower slowly.'),
+('Barbell Curl', 'BICEPS', 'PULL', 'BARBELL', FALSE, 'Hold the bar with an underhand grip and your elbows at your sides. Curl it to chest height, then lower slowly.'),
+('Hammer Curl', 'BICEPS', 'PULL', 'DUMBBELL', FALSE, 'Hold the dumbbells with your palms facing each other. Curl them up while keeping your elbows still, then lower slowly.'),
+('Cable Biceps Curl', 'BICEPS', 'PULL', 'CABLE', FALSE, 'Stand facing a low cable and hold the bar with an underhand grip. Curl it up with your elbows at your sides, then lower slowly.'),
+
+-- CORE pattern
+('Dead Bug', 'CORE', 'CORE', 'BODYWEIGHT', FALSE, 'Lie on your back with arms up and knees bent over your hips. Lower the opposite arm and leg toward the floor while keeping your lower back pressed down, then switch sides.'),
+('Bird Dog', 'CORE', 'CORE', 'BODYWEIGHT', FALSE, 'Start on hands and knees with a flat back. Extend the opposite arm and leg, pause, then return and switch sides.'),
+('Side Plank', 'CORE', 'CORE', 'BODYWEIGHT', FALSE, 'Lie on your side propped on one forearm with your feet stacked. Lift your hips into a straight line and hold, then switch sides.'),
+('Cable Crunch', 'CORE', 'CORE', 'CABLE', FALSE, 'Kneel facing a high cable with the rope at your head. Curl your ribs toward your hips by tightening your abs, then return slowly.'),
+('Pallof Press', 'CORE', 'CORE', 'CABLE', FALSE, 'Stand sideways to a cable with the handle at your chest. Press it straight out and resist the pull from rotating you, then bring it back.');
