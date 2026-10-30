@@ -9,7 +9,7 @@ public record ProfileRequest(
         @NotNull Goal goal,
         @NotNull @Min(2) @Max(5) Integer daysPerWeek,
         @NotNull Integer sessionMinutes,
-        @NotEmpty Set<Equipment> equipment
+        @NotNull Set<@NotNull Equipment> equipment
 ) {
     @AssertTrue(message = "sessionMinutes must be one of 30, 45, 60, 75, 90")
     public boolean isSessionMinutesAllowed() {

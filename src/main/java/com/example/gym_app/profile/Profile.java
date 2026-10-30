@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,7 +37,6 @@ public class Profile {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt = Instant.now();
 
-
     @ElementCollection
     @CollectionTable(name = "profile_equipment", joinColumns = @JoinColumn(name = "profile_id"))
     @Enumerated(EnumType.STRING)
@@ -56,8 +56,15 @@ public class Profile {
         this.sessionMinutes = sessionMinutes;
         this.equipment.clear();
         this.equipment.addAll(equipment);
+        this.equipment.remove(Equipment.BODYWEIGHT);
         this.updatedAt = Instant.now();
     }
 
 
+    public Set<Equipment> getUsableEquipment() {
+        Set<Equipment> usable = EnumSet.noneOf(Equipment.class);
+        usable.addAll(this.equipment);
+        usable.add(Equipment.BODYWEIGHT);
+        return usable;
+    }
 }
