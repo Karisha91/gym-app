@@ -5,6 +5,7 @@ import com.example.gym_app.exercise.MovementPattern;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -202,6 +203,33 @@ class WorkoutRulesTest {
         List<Exercise> candidates = WorkoutRules.findCandidatesForSlot(slotSpec, availableExercises);
 
         assertTrue(candidates.isEmpty());
+    }
+
+
+    @Test
+    void pickExerciseSkipsAlreadyPicked() {
+        Exercise a = new Exercise();
+        a.setMovementPattern(MovementPattern.PULL);
+        a.setCompound(true);
+
+        Exercise b = new Exercise();
+        b.setMovementPattern(MovementPattern.PULL);
+        b.setCompound(true);
+
+        Optional<Exercise> result = WorkoutRules.pickFirstUnused(List.of(a, b), List.of(a));
+
+        assertEquals(Optional.of(b), result);
+    }
+
+    @Test
+    void pickExerciseReturnsEmptyWhenAllPicked() {
+        Exercise a = new Exercise();
+        a.setMovementPattern(MovementPattern.PULL);
+        a.setCompound(true);
+
+        Optional<Exercise> result = WorkoutRules.pickFirstUnused(List.of(a), List.of(a));
+
+        assertTrue(result.isEmpty());
     }
 
 

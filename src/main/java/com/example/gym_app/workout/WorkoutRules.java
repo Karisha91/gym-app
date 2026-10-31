@@ -5,6 +5,7 @@ import com.example.gym_app.exercise.MovementPattern;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class WorkoutRules {
 
@@ -64,6 +65,12 @@ public class WorkoutRules {
         return availableExercises.stream()
                 .filter(exercise -> isValidExerciseForSlot(slotSpec, exercise))
                 .toList();
+    }
+
+    public static Optional<Exercise> pickFirstUnused(List<Exercise> candidates, List<Exercise> alreadyPicked) {
+        return candidates.stream()
+                .filter(exercise -> !alreadyPicked.contains(exercise))
+                .findFirst();
     }
 
 }
