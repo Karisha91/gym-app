@@ -1,12 +1,12 @@
 package com.example.gym_app.workout;
 
+import com.example.gym_app.exercise.Exercise;
 import com.example.gym_app.exercise.MovementPattern;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class WorkoutRulesTest {
 
@@ -92,5 +92,117 @@ class WorkoutRulesTest {
                 new SlotSpec(MovementPattern.SQUAT, CompoundRule.ISOLATION_ONLY)
         ), slots);
     }
+
+
+    @Test
+    void isValidExerciseForSlotReturnsTrueForMatchingPatternAndCompoundRule() {
+        SlotSpec slotSpec = new SlotSpec(MovementPattern.SQUAT, CompoundRule.COMPOUND_ONLY);
+        Exercise exercise = new Exercise();
+        exercise.setMovementPattern(MovementPattern.SQUAT);
+        exercise.setCompound(true);
+
+        boolean result = WorkoutRules.isValidExerciseForSlot(slotSpec, exercise);
+        assertEquals(true, result);
+    }
+
+    @Test
+    void isValidExerciseForSlotReturnsFalseWhenPatternMismatches() {
+        SlotSpec slotSpec = new SlotSpec(MovementPattern.SQUAT, CompoundRule.COMPOUND_ONLY);
+        Exercise exercise = new Exercise();
+        exercise.setMovementPattern(MovementPattern.PUSH);
+        exercise.setCompound(true);
+
+        assertFalse(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
+    }
+
+    @Test
+    void isValidExerciseForSlotReturnsFalseWhenCompoundOnlyButExerciseIsIsolation() {
+        SlotSpec slotSpec = new SlotSpec(MovementPattern.SQUAT, CompoundRule.COMPOUND_ONLY);
+        Exercise exercise = new Exercise();
+        exercise.setMovementPattern(MovementPattern.SQUAT);
+        exercise.setCompound(false);
+
+        assertFalse(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
+    }
+
+    @Test
+    void isValidExerciseForSlotReturnsTrueForIsolationOnlyAndIsolationExercise() {
+        SlotSpec slotSpec = new SlotSpec(MovementPattern.PUSH, CompoundRule.ISOLATION_ONLY);
+        Exercise exercise = new Exercise();
+        exercise.setMovementPattern(MovementPattern.PUSH);
+        exercise.setCompound(false);
+
+        assertTrue(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
+    }
+
+    @Test
+    void isValidExerciseForSlotReturnsFalseForIsolationOnlyButCompoundExercise() {
+        SlotSpec slotSpec = new SlotSpec(MovementPattern.PUSH, CompoundRule.ISOLATION_ONLY);
+        Exercise exercise = new Exercise();
+        exercise.setMovementPattern(MovementPattern.PUSH);
+        exercise.setCompound(true);
+
+        assertFalse(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
+    }
+
+    @Test
+    void isValidExerciseForSlotReturnsTrueForAnyRuleWithCompoundExercise() {
+        SlotSpec slotSpec = new SlotSpec(MovementPattern.CORE, CompoundRule.ANY);
+        Exercise exercise = new Exercise();
+        exercise.setMovementPattern(MovementPattern.CORE);
+        exercise.setCompound(true);
+
+        assertTrue(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
+    }
+
+    @Test
+    void isValidExerciseForSlotReturnsTrueForAnyRuleWithIsolationExercise() {
+        SlotSpec slotSpec = new SlotSpec(MovementPattern.CORE, CompoundRule.ANY);
+        Exercise exercise = new Exercise();
+        exercise.setMovementPattern(MovementPattern.CORE);
+        exercise.setCompound(false);
+
+        assertTrue(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
+    }
+
+    @Test
+    void findCandidatesForSlotReturnsOnlyValidExercises() {
+        SlotSpec slotSpec = new SlotSpec(MovementPattern.SQUAT, CompoundRule.COMPOUND_ONLY);
+        Exercise validExercise = new Exercise();
+        validExercise.setMovementPattern(MovementPattern.SQUAT);
+        validExercise.setCompound(true);
+
+        Exercise invalidExercise1 = new Exercise();
+        invalidExercise1.setMovementPattern(MovementPattern.PUSH);
+        invalidExercise1.setCompound(true);
+
+        Exercise invalidExercise2 = new Exercise();
+        invalidExercise2.setMovementPattern(MovementPattern.SQUAT);
+        invalidExercise2.setCompound(false);
+
+        List<Exercise> availableExercises = List.of(validExercise, invalidExercise1, invalidExercise2);
+        List<Exercise> candidates = WorkoutRules.findCandidatesForSlot(slotSpec, availableExercises);
+
+        assertEquals(1, candidates.size());
+        assertTrue(candidates.contains(validExercise));
+    }
+
+    @Test
+    void findCandidatesForSlotReturnsEmptyListWhenNoValidExercises() {
+        SlotSpec slotSpec = new SlotSpec(MovementPattern.PUSH, CompoundRule.ISOLATION_ONLY);
+        Exercise invalidExercise1 = new Exercise();
+        invalidExercise1.setMovementPattern(MovementPattern.SQUAT);
+        invalidExercise1.setCompound(true);
+
+        Exercise invalidExercise2 = new Exercise();
+        invalidExercise2.setMovementPattern(MovementPattern.PUSH);
+        invalidExercise2.setCompound(true);
+
+        List<Exercise> availableExercises = List.of(invalidExercise1, invalidExercise2);
+        List<Exercise> candidates = WorkoutRules.findCandidatesForSlot(slotSpec, availableExercises);
+
+        assertTrue(candidates.isEmpty());
+    }
+
 
 }

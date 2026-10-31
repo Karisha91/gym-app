@@ -1,5 +1,6 @@
 package com.example.gym_app.workout;
 
+import com.example.gym_app.exercise.Exercise;
 import com.example.gym_app.exercise.MovementPattern;
 
 import java.util.List;
@@ -40,6 +41,29 @@ public class WorkoutRules {
     public static List<SlotSpec> getSlotsForMinutes(int workoutMinutes) {
         int count = getExerciseCount(workoutMinutes);
         return SLOTS.subList(0, count);
+    }
+
+    public static boolean isValidExerciseForSlot(SlotSpec slotSpec, Exercise exercise) {
+        if (slotSpec.pattern() != exercise.getMovementPattern()) {
+            return false;
+        }
+
+        switch (slotSpec.compoundRule()) {
+            case COMPOUND_ONLY:
+                return exercise.isCompound();
+            case ISOLATION_ONLY:
+                return !exercise.isCompound();
+            case ANY:
+                return true;
+            default:
+                throw new IllegalArgumentException("Unknown compound rule: " + slotSpec.compoundRule());
+        }
+    }
+
+    public static List<Exercise> findCandidatesForSlot(SlotSpec slotSpec, List<Exercise> availableExercises) {
+        return availableExercises.stream()
+                .filter(exercise -> isValidExerciseForSlot(slotSpec, exercise))
+                .toList();
     }
 
 }
