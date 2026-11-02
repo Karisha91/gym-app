@@ -73,4 +73,10 @@ public class WorkoutRules {
                 .findFirst();
     }
 
+    public static PlannedSlot planSlot(SlotSpec slotSpec, List<Exercise> availableExercises, List<Exercise> alreadyPicked) {
+        List<Exercise> candidates = findCandidatesForSlot(slotSpec, availableExercises);
+        Optional<Exercise> pickedExercise = pickFirstUnused(candidates, alreadyPicked);
+        return new PlannedSlot(slotSpec, pickedExercise);
+    }
+
 }
