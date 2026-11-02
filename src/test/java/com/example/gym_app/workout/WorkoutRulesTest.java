@@ -329,13 +329,9 @@ class WorkoutRulesTest {
         List<Exercise> catalog = List.of(gobletSquat, legExtension, pushUp, dumbbellRow, plank);
 
         List<Exercise> alreadyPicked = new ArrayList<>();
-        List<PlannedSlot> plannedWorkout = new ArrayList<>();
+        List<PlannedSlot> plannedWorkout = WorkoutRules.planWorkout(45, catalog);
 
-        for (SlotSpec slot : slots) {
-            PlannedSlot planned = WorkoutRules.planSlot(slot, catalog, alreadyPicked);
-            plannedWorkout.add(planned);
-            planned.exercise().ifPresent(alreadyPicked::add);
-        }
+
 
         assertEquals(5, plannedWorkout.size());
         assertEquals("Goblet Squat", plannedWorkout.get(0).exercise().get().getName());

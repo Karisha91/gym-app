@@ -3,6 +3,7 @@ package com.example.gym_app.workout;
 import com.example.gym_app.exercise.Exercise;
 import com.example.gym_app.exercise.MovementPattern;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -77,6 +78,20 @@ public class WorkoutRules {
         List<Exercise> candidates = findCandidatesForSlot(slotSpec, availableExercises);
         Optional<Exercise> pickedExercise = pickFirstUnused(candidates, alreadyPicked);
         return new PlannedSlot(slotSpec, pickedExercise);
+    }
+
+    public static List<PlannedSlot> planWorkout(int workoutMinutes, List<Exercise> availableExercises) {
+        List<SlotSpec> slots = getSlotsForMinutes(workoutMinutes);
+        List<Exercise> alreadyPicked = new ArrayList<>();
+        List<PlannedSlot> plannedSlots = new ArrayList<>();
+
+        for (SlotSpec slotSpec : slots) {
+            PlannedSlot plannedSlot = planSlot(slotSpec, availableExercises, alreadyPicked);
+            plannedSlots.add(plannedSlot);
+            plannedSlot.exercise().ifPresent(alreadyPicked::add);
+        }
+
+        return plannedSlots;
     }
 
 }
