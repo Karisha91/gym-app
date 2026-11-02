@@ -48,4 +48,24 @@ class ProgressionRulesTest {
         double result = ProgressionRules.nextWeight(20.0, false);
         assertEquals(20.0, result);
     }
+    @Test
+    void setSchemeReturnsMaxReps() {
+        SetScheme scheme = new SetScheme(3, 8, 12);
+        assertEquals(12, scheme.maxReps());
+    }
+    @Test
+    void nextWeightIncreasesWhenSchemeHitsMaxReps() {
+        SetScheme scheme = new SetScheme(3, 8, 12);
+        double result = ProgressionRules.nextWeight(scheme, List.of(12, 12, 12), 20.0);
+        assertEquals(22.5, result);
+    }
+
+    @Test
+    void nextWeightStaysTheSameWhenSchemeMissesMaxReps() {
+        SetScheme scheme = new SetScheme(3, 8, 12);
+        double result = ProgressionRules.nextWeight(scheme, List.of(12, 12, 10), 20.0);
+        assertEquals(20.0, result);
+    }
+
+
 }

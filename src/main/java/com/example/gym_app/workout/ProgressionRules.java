@@ -20,4 +20,11 @@ public class ProgressionRules {
         }
         return currentWeight;
     }
+
+    public static double nextWeight(SetScheme scheme, List<Integer> repsPerSet, double currentWeight) {
+
+        boolean increase = shouldIncreaseWeight(repsPerSet, scheme.sets(), scheme.maxReps());
+
+        return nextWeight(currentWeight, increase);
+    }
 }
