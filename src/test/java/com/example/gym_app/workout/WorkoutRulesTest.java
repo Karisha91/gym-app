@@ -344,5 +344,81 @@ class WorkoutRulesTest {
 
     }
 
+    @Test
+    void sixtyMinutesGivesSixSlotsWithSecondPull() {
 
+        List<SlotSpec> slots = WorkoutRules.getSlotsForMinutes(60);
+        assertEquals(6, slots.size());
+        assertEquals(new SlotSpec(MovementPattern.PULL, CompoundRule.COMPOUND_ONLY), slots.getLast());
+
+
+        Exercise squat = new Exercise();
+        squat.setName("Squat");
+        squat.setMovementPattern(MovementPattern.SQUAT);
+        squat.setCompound(true);
+
+        Exercise push = new Exercise();
+        push.setName("Push-Up");
+        push.setMovementPattern(MovementPattern.PUSH);
+        push.setCompound(true);
+
+        Exercise hinge = new Exercise();
+        hinge.setName("Glute Bridge");
+        hinge.setMovementPattern(MovementPattern.HINGE);
+        hinge.setCompound(true);
+
+        Exercise pull1 = new Exercise();
+        pull1.setName("Dumbbell Row");
+        pull1.setMovementPattern(MovementPattern.PULL);
+        pull1.setCompound(true);
+
+        Exercise pull2 = new Exercise();
+        pull2.setName("Lat Pulldown");
+        pull2.setMovementPattern(MovementPattern.PULL);
+        pull2.setCompound(true);
+
+        Exercise core = new Exercise();
+        core.setName("Plank");
+        core.setMovementPattern(MovementPattern.CORE);
+        core.setCompound(false);
+
+        List<Exercise> catalog = List.of(squat, push, hinge, pull1, pull2, core);
+
+
+        List<PlannedSlot> plannedWorkout = WorkoutRules.planWorkout(60, catalog);
+
+
+        assertEquals(6, plannedWorkout.size());
+
+
+        assertEquals("Dumbbell Row", plannedWorkout.get(3).exercise().get().getName());
+
+
+        assertEquals("Lat Pulldown", plannedWorkout.get(5).exercise().get().getName());
+    }
+
+    @Test
+    void sixtyMinutesWithOnlyOnePullSkipsSecondPull() {
+        List<Exercise> catalog = List.of(
+                exercise("Squat",         MovementPattern.SQUAT, true),
+                exercise("Push-Up",       MovementPattern.PUSH,  true),
+                exercise("Glute Bridge",  MovementPattern.HINGE, true),
+                exercise("Dumbbell Row",  MovementPattern.PULL,  true),
+                exercise("Plank",         MovementPattern.CORE,  false)
+        );
+
+        List<PlannedSlot> plannedWorkout = WorkoutRules.planWorkout(60, catalog);
+
+        assertEquals("Dumbbell Row", plannedWorkout.get(3).exercise().get().getName());
+        assertTrue(plannedWorkout.get(5).isSkipped());
+    }
+
+
+    private static Exercise exercise(String name, MovementPattern pattern, boolean compound) {
+        Exercise e = new Exercise();
+        e.setName(name);
+        e.setMovementPattern(pattern);
+        e.setCompound(compound);
+        return e;
+    }
 }
