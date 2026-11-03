@@ -94,19 +94,20 @@ public class WorkoutRules {
                 .findFirst();
     }
 
-    public static PlannedSlot planSlot(SlotSpec slotSpec, List<Exercise> availableExercises, List<Exercise> alreadyPicked) {
+    public static PlannedSlot planSlot(SlotSpec slotSpec, List<Exercise> availableExercises, List<Exercise> alreadyPicked, Goal goal) {
         List<Exercise> candidates = findCandidatesForSlot(slotSpec, availableExercises);
         Optional<Exercise> pickedExercise = pickFirstUnused(candidates, alreadyPicked);
-        return new PlannedSlot(slotSpec, pickedExercise);
+        SetScheme scheme = schemeFor(goal, slotSpec);
+        return new PlannedSlot(slotSpec, pickedExercise, scheme);
     }
 
-    public static List<PlannedSlot> planWorkout(int workoutMinutes, List<Exercise> availableExercises) {
+    public static List<PlannedSlot> planWorkout(int workoutMinutes, List<Exercise> availableExercises, Goal goal) {
         List<SlotSpec> slots = getSlotsForMinutes(workoutMinutes);
-        List<Exercise> alreadyPicked = new ArrayList<>();
-        List<PlannedSlot> plannedSlots = new ArrayList<>();
+        List<Exercise> alreadyPicked = new java.util.ArrayList<>();
+        List<PlannedSlot> plannedSlots = new java.util.ArrayList<>();
 
         for (SlotSpec slotSpec : slots) {
-            PlannedSlot plannedSlot = planSlot(slotSpec, availableExercises, alreadyPicked);
+            PlannedSlot plannedSlot = planSlot(slotSpec, availableExercises, alreadyPicked, goal);
             plannedSlots.add(plannedSlot);
             plannedSlot.exercise().ifPresent(alreadyPicked::add);
         }
