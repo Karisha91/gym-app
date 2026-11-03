@@ -2,6 +2,7 @@ package com.example.gym_app.workout;
 
 import com.example.gym_app.exercise.Exercise;
 import com.example.gym_app.exercise.MovementPattern;
+import com.example.gym_app.profile.Goal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,25 @@ public class WorkoutRules {
             new SlotSpec(MovementPattern.PUSH, CompoundRule.ISOLATION_ONLY),
             new SlotSpec(MovementPattern.SQUAT, CompoundRule.ISOLATION_ONLY)
     );
+
+    private static final Map<Goal, SetScheme> COMPOUND_SCHEMES = Map.of(
+            Goal.STRENGTH, new SetScheme(3, 5, 5),
+            Goal.MUSCLE, new SetScheme(3, 8, 12),
+            Goal.FAT_LOSS, new SetScheme(3, 12, 15)
+    );
+
+    private static final SetScheme FILLER_SCHEME = new SetScheme(2, 12, 15);
+
+
+    public static SetScheme schemeFor(Goal goal, SlotSpec slot) {
+        if (slot.compoundRule() == CompoundRule.COMPOUND_ONLY) {
+            return COMPOUND_SCHEMES.get(goal);
+        } else {
+            return FILLER_SCHEME;
+        }
+    }
+
+
 
 
     public static int getExerciseCount(int workoutMinutes) {
