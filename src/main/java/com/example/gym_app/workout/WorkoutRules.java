@@ -1,13 +1,11 @@
 package com.example.gym_app.workout;
 
+import com.example.gym_app.exercise.Equipment;
 import com.example.gym_app.exercise.Exercise;
 import com.example.gym_app.exercise.MovementPattern;
 import com.example.gym_app.profile.Goal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class WorkoutRules {
 
@@ -113,6 +111,14 @@ public class WorkoutRules {
         }
 
         return plannedSlots;
+    }
+
+
+    public static List<Exercise> filterExercisesByEquipment(List<Exercise> exercises, Set<Equipment> availableEquipment) {
+
+        return exercises.stream()
+                .filter(exercise -> availableEquipment.contains(exercise.getEquipment()))
+                .toList();
     }
 
 }
