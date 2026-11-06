@@ -22,7 +22,7 @@ public class WorkoutService {
     private final CurrentUser currentUser;
 
     @Transactional(readOnly = true)
-    public List<PlannedSlot> generate() {
+    public List<PlannedSlotResponse> generate() {
 
         Profile profile = profileRepository.findByUserId(currentUser.id())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No profile yet"));
@@ -33,9 +33,12 @@ public class WorkoutService {
         );
 
         return WorkoutRules.planWorkout(
-                profile.getSessionMinutes(),
-                exercises,
-                profile.getGoal()
-        );
+                        profile.getSessionMinutes(),
+                        exercises,
+                        profile.getGoal()
+                )
+                .stream()
+                .map(PlannedSlotResponse::from)
+                .toList();
     }
 }
