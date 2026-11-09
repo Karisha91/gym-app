@@ -25,7 +25,7 @@ public class WorkoutService {
     private final WorkoutExerciseRepository workoutExerciseRepository;
 
     @Transactional
-    public List<PlannedSlotResponse> generate() {
+    public WorkoutResponse generate() {
         Profile profile = profileRepository.findByUserId(currentUser.id())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No profile yet"));
 
@@ -40,16 +40,10 @@ public class WorkoutService {
                 profile.getGoal()
         );
 
-
-        saveWorkout(profile, plannedSlots);
-
-        return plannedSlots.stream()
-                .map(PlannedSlotResponse::from)
-                .toList();
+        return saveWorkout(profile, plannedSlots);
     }
 
-
-    private void saveWorkout(Profile profile, List<PlannedSlot> plannedSlots) {
+    private WorkoutResponse saveWorkout(Profile profile, List<PlannedSlot> plannedSlots) {
         Workout workout = new Workout(
                 profile.getUserId(),
                 profile.getGoal(),
@@ -70,6 +64,10 @@ public class WorkoutService {
                     slot.scheme().maxReps()
             ));
         }
-        workoutExerciseRepository.saveAll(workoutExercises);
+
+
+        List<WorkoutExercise> savedRows = workoutExerciseRepository.saveAll(workoutExercises);
+
+        return WorkoutResponse.from(savedWorkout, savedRows);
     }
 }
