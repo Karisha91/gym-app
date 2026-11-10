@@ -1,7 +1,11 @@
 package com.example.gym_app.workout;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,9 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class WorkoutController {
 
     private final WorkoutService workoutService;
+    private final SetLogService setLogService;
 
     @PostMapping("/generate")
     public WorkoutResponse generate() {
         return workoutService.generate();
+    }
+
+    @PutMapping("/{workoutId}/slots/{slotId}/sets")
+    public void logSets(
+            @PathVariable Long workoutId,
+            @PathVariable Long slotId,
+            @Valid @RequestBody LogSetsRequest request
+    ) {
+        setLogService.logSets(workoutId, slotId, request);
     }
 }
