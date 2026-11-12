@@ -1,6 +1,7 @@
 package com.example.gym_app.workout;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ProgressionRules {
 
@@ -26,5 +27,25 @@ public class ProgressionRules {
         boolean increase = shouldIncreaseWeight(repsPerSet, scheme.sets(), scheme.maxReps());
 
         return nextWeight(currentWeight, increase);
+    }
+
+    public static Optional<Double> suggestWeight(SetScheme scheme, List<LoggedSet> lastSession) {
+        if (lastSession == null || lastSession.isEmpty()) {
+            return Optional.empty();
+        }
+
+        double maxWeight = lastSession.stream()
+                .mapToDouble(LoggedSet::weightKg)
+                .max()
+                .getAsDouble();
+
+        List<Integer> repsPerSet = lastSession.stream()
+                .map(LoggedSet::reps)
+                .toList();
+
+
+        double nextWeight = nextWeight(scheme, repsPerSet, maxWeight);
+
+        return Optional.of(nextWeight);
     }
 }

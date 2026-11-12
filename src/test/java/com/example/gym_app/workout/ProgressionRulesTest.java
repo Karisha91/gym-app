@@ -2,6 +2,7 @@ package com.example.gym_app.workout;
 
 import org.junit.jupiter.api.Test;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,6 +66,56 @@ class ProgressionRulesTest {
         SetScheme scheme = new SetScheme(3, 8, 12);
         double result = ProgressionRules.nextWeight(scheme, List.of(12, 12, 10), 20.0);
         assertEquals(20.0, result);
+    }
+
+    @Test
+    void suggestWeightReturnsEmptyWhenNoHistory() {
+        SetScheme scheme = new SetScheme(3, 8, 12);
+        assertEquals(Optional.empty(), ProgressionRules.suggestWeight(scheme, List.of()));
+    }
+
+    @Test
+    void suggestWeightIncreasesWhenAllRepsHit() {
+        SetScheme scheme = new SetScheme(3, 8, 12);
+        List<LoggedSet> history = List.of(
+                new LoggedSet(20.0, 12),
+                new LoggedSet(20.0, 12),
+                new LoggedSet(20.0, 12)
+        );
+        assertEquals(Optional.of(22.5), ProgressionRules.suggestWeight(scheme, history));
+    }
+
+    @Test
+    void suggestWeightStaysSameWhenOneRepMisses() {
+        SetScheme scheme = new SetScheme(3, 8, 12);
+        List<LoggedSet> history = List.of(
+                new LoggedSet(20.0, 12),
+                new LoggedSet(20.0, 12),
+                new LoggedSet(20.0, 10)
+        );
+        assertEquals(Optional.of(20.0), ProgressionRules.suggestWeight(scheme, history));
+    }
+
+    @Test
+    void suggestWeightStaysSameWhenFewerSetsLogged() {
+        SetScheme scheme = new SetScheme(3, 8, 12);
+        List<LoggedSet> history = List.of(
+                new LoggedSet(20.0, 12),
+                new LoggedSet(20.0, 12)
+        );
+        assertEquals(Optional.of(20.0), ProgressionRules.suggestWeight(scheme, history));
+    }
+
+    @Test
+    void suggestWeightUsesHeaviestWeightFromMixedSets() {
+        SetScheme scheme = new SetScheme(3, 8, 12);
+        List<LoggedSet> history = List.of(
+                new LoggedSet(20.0, 12),
+                new LoggedSet(22.5, 12),
+                new LoggedSet(20.0, 12)
+        );
+
+        assertEquals(Optional.of(25.0), ProgressionRules.suggestWeight(scheme, history));
     }
 
 
