@@ -10,7 +10,8 @@ public record WorkoutSlotResponse(
         ExerciseResponse exercise,
         int sets,
         int minReps,
-        int maxReps
+        int maxReps,
+        Double targetWeightKg
 ) {
     public static WorkoutSlotResponse from(WorkoutExercise row) {
         return new WorkoutSlotResponse(
@@ -20,7 +21,8 @@ public record WorkoutSlotResponse(
                 row.getExercise() == null ? null : ExerciseResponse.from(row.getExercise()),
                 row.getSets(),
                 row.getMinReps(),
-                row.getMaxReps()
+                row.getMaxReps(),
+                row.getTargetWeightKg()
         );
     }
 }

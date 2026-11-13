@@ -6,8 +6,6 @@ import com.example.gym_app.exercise.MovementPattern;
 import com.example.gym_app.profile.Goal;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class WorkoutSlotResponseTest {
@@ -23,7 +21,7 @@ class WorkoutSlotResponseTest {
         exercise.setCompound(true);
 
         WorkoutExercise row = new WorkoutExercise(
-                workout, 1, MovementPattern.SQUAT, exercise, 3, 8, 12
+                workout, 1, MovementPattern.SQUAT, exercise, 3, 8, 12, 20.0
         );
 
         WorkoutSlotResponse response = WorkoutSlotResponse.from(row);
@@ -35,6 +33,7 @@ class WorkoutSlotResponseTest {
         assertEquals(3, response.sets());
         assertEquals(8, response.minReps());
         assertEquals(12, response.maxReps());
+        assertEquals(20.0, response.targetWeightKg());
     }
 
     @Test
@@ -42,7 +41,7 @@ class WorkoutSlotResponseTest {
         Workout workout = new Workout(1L, Goal.MUSCLE, 60);
 
         WorkoutExercise row = new WorkoutExercise(
-                workout, 2, MovementPattern.PULL, null, 3, 8, 12
+                workout, 2, MovementPattern.PULL, null, 3, 8, 12, null
         );
 
         WorkoutSlotResponse response = WorkoutSlotResponse.from(row);
@@ -51,5 +50,6 @@ class WorkoutSlotResponseTest {
         assertEquals(MovementPattern.PULL, response.pattern());
         assertNull(response.exercise());
         assertEquals(3, response.sets());
+        assertNull(response.targetWeightKg());
     }
 }

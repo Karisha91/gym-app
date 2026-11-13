@@ -41,8 +41,11 @@ public class WorkoutExercise {
     @Column(name = "max_reps", nullable = false)
     private int maxReps;
 
+    @Column(name = "target_weight_kg")
+    private Double targetWeightKg;
+
     public WorkoutExercise(Workout workout, int position, MovementPattern movementPattern,
-                           Exercise exercise, int sets, int minReps, int maxReps) {
+                           Exercise exercise, int sets, int minReps, int maxReps, Double targetWeightKg) {
         this.workout = workout;
         this.position = position;
         this.movementPattern = movementPattern;
@@ -50,5 +53,6 @@ public class WorkoutExercise {
         this.sets = sets;
         this.minReps = minReps;
         this.maxReps = maxReps;
+        this.targetWeightKg = targetWeightKg;
     }
 }

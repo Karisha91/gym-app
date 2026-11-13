@@ -23,10 +23,10 @@ class WorkoutResponseTest {
         squat.setCompound(true);
 
         WorkoutExercise row1 = new WorkoutExercise(
-                workout, 1, MovementPattern.SQUAT, squat, 3, 8, 12
+                workout, 1, MovementPattern.SQUAT, squat, 3, 8, 12, null
         );
         WorkoutExercise row2 = new WorkoutExercise(
-                workout, 2, MovementPattern.PULL, null, 3, 8, 12
+                workout, 2, MovementPattern.PULL, null, 3, 8, 12, null
         );
 
         WorkoutResponse response = WorkoutResponse.from(workout, List.of(row1, row2));
