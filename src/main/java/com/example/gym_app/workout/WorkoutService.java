@@ -58,10 +58,14 @@ public class WorkoutService {
             Double targetWeightKg = null;
 
             if (slot.exercise().isPresent()) {
-                Long exerciseId = slot.exercise().get().getId();
-                List<LoggedSet> history = lastSession(profile.getUserId(), exerciseId);
-                targetWeightKg = ProgressionRules.suggestWeight(slot.scheme(), history)
-                        .orElse(null);
+                var exercise = slot.exercise().get();
+
+
+                if (ProgressionRules.supportsWeightProgression(exercise.getEquipment())) {
+                    List<LoggedSet> history = lastSession(profile.getUserId(), exercise.getId());
+                    targetWeightKg = ProgressionRules.suggestWeight(slot.scheme(), history)
+                            .orElse(null);
+                }
             }
 
             workoutExercises.add(new WorkoutExercise(

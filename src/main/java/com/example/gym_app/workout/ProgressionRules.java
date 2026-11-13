@@ -1,5 +1,7 @@
 package com.example.gym_app.workout;
 
+import com.example.gym_app.exercise.Equipment;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -47,5 +49,9 @@ public class ProgressionRules {
         double nextWeight = nextWeight(scheme, repsPerSet, maxWeight);
 
         return Optional.of(nextWeight);
+    }
+
+    public static boolean supportsWeightProgression(Equipment equipment) {
+        return equipment != Equipment.BODYWEIGHT;
     }
 }
