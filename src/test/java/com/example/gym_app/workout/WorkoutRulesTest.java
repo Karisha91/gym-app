@@ -5,9 +5,9 @@ import com.example.gym_app.exercise.MovementPattern;
 import com.example.gym_app.profile.Goal;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +30,6 @@ class WorkoutRulesTest {
         List<SlotSpec> slots = WorkoutRules.getSlotsForMinutes(30);
         assertEquals(4, slots.size());
         assertEquals(new SlotSpec(MovementPattern.SQUAT, CompoundRule.COMPOUND_ONLY), slots.getFirst());
-
     }
 
     @Test
@@ -96,16 +95,13 @@ class WorkoutRulesTest {
         ), slots);
     }
 
-
     @Test
     void isValidExerciseForSlotReturnsTrueForMatchingPatternAndCompoundRule() {
         SlotSpec slotSpec = new SlotSpec(MovementPattern.SQUAT, CompoundRule.COMPOUND_ONLY);
         Exercise exercise = new Exercise();
         exercise.setMovementPattern(MovementPattern.SQUAT);
         exercise.setCompound(true);
-
-        boolean result = WorkoutRules.isValidExerciseForSlot(slotSpec, exercise);
-        assertTrue(result);
+        assertTrue(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
     }
 
     @Test
@@ -114,7 +110,6 @@ class WorkoutRulesTest {
         Exercise exercise = new Exercise();
         exercise.setMovementPattern(MovementPattern.PUSH);
         exercise.setCompound(true);
-
         assertFalse(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
     }
 
@@ -124,7 +119,6 @@ class WorkoutRulesTest {
         Exercise exercise = new Exercise();
         exercise.setMovementPattern(MovementPattern.SQUAT);
         exercise.setCompound(false);
-
         assertFalse(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
     }
 
@@ -134,7 +128,6 @@ class WorkoutRulesTest {
         Exercise exercise = new Exercise();
         exercise.setMovementPattern(MovementPattern.PUSH);
         exercise.setCompound(false);
-
         assertTrue(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
     }
 
@@ -144,7 +137,6 @@ class WorkoutRulesTest {
         Exercise exercise = new Exercise();
         exercise.setMovementPattern(MovementPattern.PUSH);
         exercise.setCompound(true);
-
         assertFalse(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
     }
 
@@ -154,7 +146,6 @@ class WorkoutRulesTest {
         Exercise exercise = new Exercise();
         exercise.setMovementPattern(MovementPattern.CORE);
         exercise.setCompound(true);
-
         assertTrue(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
     }
 
@@ -164,7 +155,6 @@ class WorkoutRulesTest {
         Exercise exercise = new Exercise();
         exercise.setMovementPattern(MovementPattern.CORE);
         exercise.setCompound(false);
-
         assertTrue(WorkoutRules.isValidExerciseForSlot(slotSpec, exercise));
     }
 
@@ -207,7 +197,6 @@ class WorkoutRulesTest {
         assertTrue(candidates.isEmpty());
     }
 
-
     @Test
     void pickExerciseSkipsAlreadyPicked() {
         Exercise a = new Exercise();
@@ -218,7 +207,7 @@ class WorkoutRulesTest {
         b.setMovementPattern(MovementPattern.PULL);
         b.setCompound(true);
 
-        Optional<Exercise> result = WorkoutRules.pickFirstUnused(List.of(a, b), List.of(a));
+        Optional<Exercise> result = WorkoutRules.pickFirstUnused(List.of(a, b), List.of(a), Set.of());
 
         assertEquals(Optional.of(b), result);
     }
@@ -229,7 +218,7 @@ class WorkoutRulesTest {
         a.setMovementPattern(MovementPattern.PULL);
         a.setCompound(true);
 
-        Optional<Exercise> result = WorkoutRules.pickFirstUnused(List.of(a), List.of(a));
+        Optional<Exercise> result = WorkoutRules.pickFirstUnused(List.of(a), List.of(a), Set.of());
 
         assertTrue(result.isEmpty());
     }
@@ -243,7 +232,6 @@ class WorkoutRulesTest {
                 Optional.of(exercise),
                 new SetScheme(3, 8, 12)
         );
-
         assertFalse(planned.isSkipped());
     }
 
@@ -253,9 +241,8 @@ class WorkoutRulesTest {
         PlannedSlot planned = new PlannedSlot(
                 slot,
                 Optional.empty(),
-                new SetScheme(3, 8, 12)   // placeholder
+                new SetScheme(3, 8, 12)
         );
-
         assertTrue(planned.isSkipped());
     }
 
@@ -267,7 +254,7 @@ class WorkoutRulesTest {
 
         SlotSpec slot = new SlotSpec(MovementPattern.SQUAT, CompoundRule.COMPOUND_ONLY);
 
-        PlannedSlot planned = WorkoutRules.planSlot(slot, List.of(squat), List.of(), Goal.MUSCLE);
+        PlannedSlot planned = WorkoutRules.planSlot(slot, List.of(squat), List.of(), Goal.MUSCLE, Set.of());
 
         assertFalse(planned.isSkipped());
         assertEquals(Optional.of(squat), planned.exercise());
@@ -281,7 +268,7 @@ class WorkoutRulesTest {
 
         SlotSpec slot = new SlotSpec(MovementPattern.SQUAT, CompoundRule.COMPOUND_ONLY);
 
-        PlannedSlot planned = WorkoutRules.planSlot(slot, List.of(push), List.of(), Goal.MUSCLE);
+        PlannedSlot planned = WorkoutRules.planSlot(slot, List.of(push), List.of(), Goal.MUSCLE, Set.of());
 
         assertTrue(planned.isSkipped());
     }
@@ -294,15 +281,13 @@ class WorkoutRulesTest {
 
         SlotSpec slot = new SlotSpec(MovementPattern.PULL, CompoundRule.COMPOUND_ONLY);
 
-        PlannedSlot planned = WorkoutRules.planSlot(slot, List.of(row), List.of(row), Goal.MUSCLE);
+        PlannedSlot planned = WorkoutRules.planSlot(slot, List.of(row), List.of(row), Goal.MUSCLE, Set.of());
 
         assertTrue(planned.isSkipped());
     }
 
     @Test
     void getTheLadderForFortyFiveMinutes() {
-
-
         Exercise gobletSquat = new Exercise();
         gobletSquat.setName("Goblet Squat");
         gobletSquat.setMovementPattern(MovementPattern.SQUAT);
@@ -330,11 +315,11 @@ class WorkoutRulesTest {
 
         List<Exercise> catalog = List.of(gobletSquat, legExtension, pushUp, dumbbellRow, plank);
 
-        List<PlannedSlot> plannedWorkout = WorkoutRules.planWorkout(45, catalog, Goal.MUSCLE);
+        List<PlannedSlot> plannedWorkout = WorkoutRules.planWorkout(45, catalog, Goal.MUSCLE, Set.of());
 
         assertEquals(5, plannedWorkout.size());
         assertEquals("Goblet Squat", plannedWorkout.get(0).exercise().get().getName());
-        assertEquals(new SetScheme(3, 8, 12), plannedWorkout.get(0).scheme());   // NEW assertion
+        assertEquals(new SetScheme(3, 8, 12), plannedWorkout.get(0).scheme());
         assertEquals("Push-Up", plannedWorkout.get(1).exercise().get().getName());
         assertTrue(plannedWorkout.get(2).isSkipped());
         assertEquals("Dumbbell Row", plannedWorkout.get(3).exercise().get().getName());
@@ -343,11 +328,9 @@ class WorkoutRulesTest {
 
     @Test
     void sixtyMinutesGivesSixSlotsWithSecondPull() {
-
         List<SlotSpec> slots = WorkoutRules.getSlotsForMinutes(60);
         assertEquals(6, slots.size());
         assertEquals(new SlotSpec(MovementPattern.PULL, CompoundRule.COMPOUND_ONLY), slots.getLast());
-
 
         Exercise squat = new Exercise();
         squat.setName("Squat");
@@ -381,16 +364,10 @@ class WorkoutRulesTest {
 
         List<Exercise> catalog = List.of(squat, push, hinge, pull1, pull2, core);
 
-
-        List<PlannedSlot> plannedWorkout = WorkoutRules.planWorkout(60, catalog, Goal.MUSCLE);
-
+        List<PlannedSlot> plannedWorkout = WorkoutRules.planWorkout(60, catalog, Goal.MUSCLE, Set.of());
 
         assertEquals(6, plannedWorkout.size());
-
-
         assertEquals("Dumbbell Row", plannedWorkout.get(3).exercise().get().getName());
-
-
         assertEquals("Lat Pulldown", plannedWorkout.get(5).exercise().get().getName());
     }
 
@@ -404,12 +381,11 @@ class WorkoutRulesTest {
                 exercise("Plank",         MovementPattern.CORE,  false)
         );
 
-        List<PlannedSlot> plannedWorkout = WorkoutRules.planWorkout(60, catalog, Goal.MUSCLE);
+        List<PlannedSlot> plannedWorkout = WorkoutRules.planWorkout(60, catalog, Goal.MUSCLE, Set.of());
 
         assertEquals("Dumbbell Row", plannedWorkout.get(3).exercise().get().getName());
         assertTrue(plannedWorkout.get(5).isSkipped());
     }
-
 
     private static Exercise exercise(String name, MovementPattern pattern, boolean compound) {
         Exercise e = new Exercise();
@@ -456,5 +432,69 @@ class WorkoutRulesTest {
             assertNotNull(WorkoutRules.schemeFor(goal, compoundSlot),
                     "No scheme defined for goal " + goal);
         }
+    }
+
+    @Test
+    void pickFirstUnusedPrefersAlternativeOverRecentExercise() {
+        Exercise goblet = exercise("Goblet Squat", MovementPattern.SQUAT, true);
+        goblet.setId(1L);
+        Exercise barbell = exercise("Barbell Squat", MovementPattern.SQUAT, true);
+        barbell.setId(2L);
+
+        Set<Long> recent = Set.of(1L);
+
+        Optional<Exercise> result = WorkoutRules.pickFirstUnused(
+                List.of(goblet, barbell), List.of(), recent
+        );
+
+        assertEquals(Optional.of(barbell), result);
+    }
+
+    @Test
+    void pickFirstUnusedFallsBackToRecentWhenOnlyOption() {
+        Exercise goblet = exercise("Goblet Squat", MovementPattern.SQUAT, true);
+        goblet.setId(1L);
+
+        Set<Long> recent = Set.of(1L);
+
+        Optional<Exercise> result = WorkoutRules.pickFirstUnused(
+                List.of(goblet), List.of(), recent
+        );
+
+        assertEquals(Optional.of(goblet), result);
+    }
+
+    @Test
+    void pickFirstUnusedBehavesAsBeforeWhenRecentIsEmpty() {
+        Exercise goblet = exercise("Goblet Squat", MovementPattern.SQUAT, true);
+        goblet.setId(1L);
+        Exercise barbell = exercise("Barbell Squat", MovementPattern.SQUAT, true);
+        barbell.setId(2L);
+
+        Set<Long> recent = Set.of();
+
+        Optional<Exercise> result = WorkoutRules.pickFirstUnused(
+                List.of(goblet, barbell), List.of(), recent
+        );
+
+        assertEquals(Optional.of(goblet), result);
+    }
+
+    @Test
+    void planWorkoutPrefersNonRecentExercise() {
+        Exercise goblet = exercise("Goblet Squat", MovementPattern.SQUAT, true);
+        goblet.setId(1L);
+        Exercise barbell = exercise("Barbell Squat", MovementPattern.SQUAT, true);
+        barbell.setId(2L);
+
+        Set<Long> recent = Set.of(1L);
+
+        List<Exercise> catalog = List.of(goblet, barbell);
+
+
+        List<PlannedSlot> workout = WorkoutRules.planWorkout(30, catalog, Goal.MUSCLE, recent);
+
+
+        assertEquals("Barbell Squat", workout.get(0).exercise().get().getName());
     }
 }

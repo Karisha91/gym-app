@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,8 @@ public class WorkoutService {
         List<PlannedSlot> plannedSlots = WorkoutRules.planWorkout(
                 profile.getSessionMinutes(),
                 exercises,
-                profile.getGoal()
+                profile.getGoal(),
+                Set.of()
         );
 
         return saveWorkout(profile, plannedSlots);

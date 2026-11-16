@@ -9,7 +9,6 @@ import java.util.*;
 
 public class WorkoutRules {
 
-
     private static final Map<Integer, Integer> WORKOUT_MINUTES_TO_EXERCISE_COUNT = Map.of(
             30, 4,
             45, 5,
@@ -37,7 +36,6 @@ public class WorkoutRules {
 
     private static final SetScheme FILLER_SCHEME = new SetScheme(2, 12, 15);
 
-
     public static SetScheme schemeFor(Goal goal, SlotSpec slot) {
         if (slot.compoundRule() == CompoundRule.COMPOUND_ONLY) {
             return COMPOUND_SCHEMES.get(goal);
@@ -46,9 +44,6 @@ public class WorkoutRules {
         }
     }
 
-
-
-
     public static int getExerciseCount(int workoutMinutes) {
         Integer exerciseCount = WORKOUT_MINUTES_TO_EXERCISE_COUNT.get(workoutMinutes);
         if (exerciseCount == null) {
@@ -56,7 +51,6 @@ public class WorkoutRules {
         }
         return exerciseCount;
     }
-
 
     public static List<SlotSpec> getSlotsForMinutes(int workoutMinutes) {
         int count = getExerciseCount(workoutMinutes);
@@ -86,26 +80,54 @@ public class WorkoutRules {
                 .toList();
     }
 
-    public static Optional<Exercise> pickFirstUnused(List<Exercise> candidates, List<Exercise> alreadyPicked) {
-        return candidates.stream()
+    public static Optional<Exercise> pickFirstUnused(
+            List<Exercise> candidates,
+            List<Exercise> alreadyPicked,
+            Set<Long> recentExerciseIds
+    ) {
+
+        List<Exercise> available = candidates.stream()
                 .filter(exercise -> !alreadyPicked.contains(exercise))
+                .toList();
+
+
+        Optional<Exercise> notRecent = available.stream()
+                .filter(exercise -> exercise.getId() == null || !recentExerciseIds.contains(exercise.getId()))
                 .findFirst();
+
+        if (notRecent.isPresent()) {
+            return notRecent;
+        }
+
+
+        return available.stream().findFirst();
     }
 
-    public static PlannedSlot planSlot(SlotSpec slotSpec, List<Exercise> availableExercises, List<Exercise> alreadyPicked, Goal goal) {
+    public static PlannedSlot planSlot(
+            SlotSpec slotSpec,
+            List<Exercise> availableExercises,
+            List<Exercise> alreadyPicked,
+            Goal goal,
+            Set<Long> recentExerciseIds
+    ) {
         List<Exercise> candidates = findCandidatesForSlot(slotSpec, availableExercises);
-        Optional<Exercise> pickedExercise = pickFirstUnused(candidates, alreadyPicked);
+        Optional<Exercise> pickedExercise = pickFirstUnused(candidates, alreadyPicked, recentExerciseIds);
         SetScheme scheme = schemeFor(goal, slotSpec);
         return new PlannedSlot(slotSpec, pickedExercise, scheme);
     }
 
-    public static List<PlannedSlot> planWorkout(int workoutMinutes, List<Exercise> availableExercises, Goal goal) {
+    public static List<PlannedSlot> planWorkout(
+            int workoutMinutes,
+            List<Exercise> availableExercises,
+            Goal goal,
+            Set<Long> recentExerciseIds
+    ) {
         List<SlotSpec> slots = getSlotsForMinutes(workoutMinutes);
-        List<Exercise> alreadyPicked = new java.util.ArrayList<>();
-        List<PlannedSlot> plannedSlots = new java.util.ArrayList<>();
+        List<Exercise> alreadyPicked = new ArrayList<>();
+        List<PlannedSlot> plannedSlots = new ArrayList<>();
 
         for (SlotSpec slotSpec : slots) {
-            PlannedSlot plannedSlot = planSlot(slotSpec, availableExercises, alreadyPicked, goal);
+            PlannedSlot plannedSlot = planSlot(slotSpec, availableExercises, alreadyPicked, goal, recentExerciseIds);
             plannedSlots.add(plannedSlot);
             plannedSlot.exercise().ifPresent(alreadyPicked::add);
         }
@@ -113,12 +135,9 @@ public class WorkoutRules {
         return plannedSlots;
     }
 
-
     public static List<Exercise> filterExercisesByEquipment(List<Exercise> exercises, Set<Equipment> availableEquipment) {
-
         return exercises.stream()
                 .filter(exercise -> availableEquipment.contains(exercise.getEquipment()))
                 .toList();
     }
-
 }
