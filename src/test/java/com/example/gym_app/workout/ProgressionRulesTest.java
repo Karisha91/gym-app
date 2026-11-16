@@ -1,5 +1,6 @@
 package com.example.gym_app.workout;
 
+import com.example.gym_app.exercise.Equipment;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
@@ -116,6 +117,16 @@ class ProgressionRulesTest {
         );
 
         assertEquals(Optional.of(25.0), ProgressionRules.suggestWeight(scheme, history));
+    }
+
+    @Test
+    void supportsWeightProgressionReturnsTrueForDumbbell() {
+        assertTrue(ProgressionRules.supportsWeightProgression(Equipment.DUMBBELL));
+    }
+
+    @Test
+    void supportsWeightProgressionReturnsFalseForBodyweight() {
+        assertFalse(ProgressionRules.supportsWeightProgression(Equipment.BODYWEIGHT));
     }
 
 
