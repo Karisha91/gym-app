@@ -14,7 +14,7 @@ public class ExerciseService {
 
     @Transactional(readOnly = true)
     public List<ExerciseResponse> findAll() {
-        return exerciseRepository.findAll().stream()
+        return exerciseRepository.findAllByOrderByIdAsc().stream()
                 .map(ExerciseResponse::from)
                 .toList();
     }

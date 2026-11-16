@@ -34,7 +34,7 @@ public class WorkoutService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No profile yet"));
 
         List<Exercise> exercises = WorkoutRules.filterExercisesByEquipment(
-                exerciseRepository.findAll(),
+                exerciseRepository.findAllByOrderByIdAsc(),
                 profile.getUsableEquipment()
         );
 
