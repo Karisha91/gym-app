@@ -13,7 +13,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,11 +38,13 @@ public class WorkoutService {
                 profile.getUsableEquipment()
         );
 
+        Set<Long> recentExerciseIds = loadRecentExerciseIds();
+
         List<PlannedSlot> plannedSlots = WorkoutRules.planWorkout(
                 profile.getSessionMinutes(),
                 exercises,
                 profile.getGoal(),
-                Set.of()
+                recentExerciseIds
         );
 
         return saveWorkout(profile, plannedSlots);
@@ -101,5 +105,15 @@ public class WorkoutService {
                 .filter(log -> log.getWorkoutExercise().getId().equals(mostRecentSlotId))
                 .map(log -> new LoggedSet(log.getWeightKg(), log.getReps()))
                 .toList();
+    }
+
+    private Set<Long> loadRecentExerciseIds() {
+        return workoutRepository.findFirstByUserIdOrderByIdDesc(currentUser.id())
+                .map(workout -> workoutExerciseRepository.findByWorkoutId(workout.getId()).stream()
+                        .map(WorkoutExercise::getExercise)
+                        .filter(Objects::nonNull)
+                        .map(Exercise::getId)
+                        .collect(Collectors.toSet()))
+                .orElse(Set.of());
     }
 }
