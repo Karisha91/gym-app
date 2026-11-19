@@ -14,6 +14,11 @@ public class ExplanationService {
     private final WorkoutExplainer explainer;
 
     public ExplainResponse explain(ExplainRequest request) {
+
+        if (request.slots().isEmpty()) {
+            return ExplainValidator.fallbackFor(request);
+        }
+
         try {
             ExplainResponse response = explainer.explain(request);
             if (ExplainValidator.isValid(request, response)) {

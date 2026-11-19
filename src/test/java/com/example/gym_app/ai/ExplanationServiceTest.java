@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExplanationServiceTest {
 
@@ -50,6 +50,25 @@ class ExplanationServiceTest {
         ExplainResponse response = service.explain(request());
 
         assertEquals(ExplainValidator.fallbackFor(request()), response);
+    }
+
+    @Test
+    void doesNotCallExplainerWhenRequestHasNoSlots() {
+        WorkoutExplainer shouldNotBeCalled = req -> {
+            throw new AssertionError("Explainer should not be called for empty request");
+        };
+        ExplanationService service = new ExplanationService(shouldNotBeCalled);
+
+        ExplainRequest emptyRequest = new ExplainRequest(
+                Goal.MUSCLE,
+                Set.of(Equipment.DUMBBELL),
+                List.of()
+        );
+
+        ExplainResponse response = service.explain(emptyRequest);
+
+        assertNotNull(response);
+        assertTrue(response.slots().isEmpty());
     }
 
     private static ExplainRequest request() {

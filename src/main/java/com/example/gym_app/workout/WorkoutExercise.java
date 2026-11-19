@@ -44,8 +44,11 @@ public class WorkoutExercise {
     @Column(name = "target_weight_kg")
     private Double targetWeightKg;
 
+    @Column(name = "why", length = 150)
+    private String why;
+
     public WorkoutExercise(Workout workout, int position, MovementPattern movementPattern,
-                           Exercise exercise, int sets, int minReps, int maxReps, Double targetWeightKg) {
+                           Exercise exercise, int sets, int minReps, int maxReps, Double targetWeightKg, String why) {
         this.workout = workout;
         this.position = position;
         this.movementPattern = movementPattern;
@@ -54,5 +57,6 @@ public class WorkoutExercise {
         this.minReps = minReps;
         this.maxReps = maxReps;
         this.targetWeightKg = targetWeightKg;
+        this.why = why;
     }
 }

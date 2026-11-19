@@ -1,5 +1,8 @@
 package com.example.gym_app.workout;
 
+import com.example.gym_app.ai.ExplainRequest;
+import com.example.gym_app.ai.ExplainResponse;
+import com.example.gym_app.ai.ExplanationService;
 import com.example.gym_app.exercise.Exercise;
 import com.example.gym_app.exercise.ExerciseRepository;
 import com.example.gym_app.profile.Profile;
@@ -13,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,6 +31,7 @@ public class WorkoutService {
     private final WorkoutRepository workoutRepository;
     private final WorkoutExerciseRepository workoutExerciseRepository;
     private final SetLogRepository setLogRepository;
+    private final ExplanationService explanationService;
 
     @Transactional
     public WorkoutResponse generate() {
@@ -58,20 +63,38 @@ public class WorkoutService {
         );
         Workout savedWorkout = workoutRepository.save(workout);
 
+
+        ExplainRequest explainRequest = ExplainRequestBuilder.build(
+                profile.getGoal(),
+                profile.getUsableEquipment(),
+                plannedSlots
+        );
+
+
+        ExplainResponse explainResponse = explanationService.explain(explainRequest);
+        Map<Integer, String> whyByPosition = explainResponse.slots().stream()
+                .collect(Collectors.toMap(
+                        ExplainResponse.ResponseSlot::position,
+                        ExplainResponse.ResponseSlot::why
+                ));
+
+
         List<WorkoutExercise> workoutExercises = new ArrayList<>();
         for (int i = 0; i < plannedSlots.size(); i++) {
             PlannedSlot slot = plannedSlots.get(i);
             Double targetWeightKg = null;
+            String why = null;
 
             if (slot.exercise().isPresent()) {
                 var exercise = slot.exercise().get();
-
 
                 if (ProgressionRules.supportsWeightProgression(exercise.getEquipment())) {
                     List<LoggedSet> history = lastSession(profile.getUserId(), exercise.getId());
                     targetWeightKg = ProgressionRules.suggestWeight(slot.scheme(), history)
                             .orElse(null);
                 }
+
+                why = whyByPosition.get(i + 1);
             }
 
             workoutExercises.add(new WorkoutExercise(
@@ -82,7 +105,8 @@ public class WorkoutService {
                     slot.scheme().sets(),
                     slot.scheme().minReps(),
                     slot.scheme().maxReps(),
-                    targetWeightKg
+                    targetWeightKg,
+                    why
             ));
         }
 
@@ -90,7 +114,6 @@ public class WorkoutService {
 
         return WorkoutResponse.from(savedWorkout, savedRows);
     }
-
 
     private List<LoggedSet> lastSession(Long userId, Long exerciseId) {
         List<SetLog> allHistory = setLogRepository.findHistory(userId, exerciseId);

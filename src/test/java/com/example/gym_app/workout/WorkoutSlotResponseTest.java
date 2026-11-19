@@ -21,7 +21,7 @@ class WorkoutSlotResponseTest {
         exercise.setCompound(true);
 
         WorkoutExercise row = new WorkoutExercise(
-                workout, 1, MovementPattern.SQUAT, exercise, 3, 8, 12, 20.0
+                workout, 1, MovementPattern.SQUAT, exercise, 3, 8, 12, 20.0, "Goblet Squat is a good fit."
         );
 
         WorkoutSlotResponse response = WorkoutSlotResponse.from(row);
@@ -34,6 +34,7 @@ class WorkoutSlotResponseTest {
         assertEquals(8, response.minReps());
         assertEquals(12, response.maxReps());
         assertEquals(20.0, response.targetWeightKg());
+        assertEquals("Goblet Squat is a good fit.", response.why());
     }
 
     @Test
@@ -41,7 +42,7 @@ class WorkoutSlotResponseTest {
         Workout workout = new Workout(1L, Goal.MUSCLE, 60);
 
         WorkoutExercise row = new WorkoutExercise(
-                workout, 2, MovementPattern.PULL, null, 3, 8, 12, null
+                workout, 2, MovementPattern.PULL, null, 3, 8, 12, null, null
         );
 
         WorkoutSlotResponse response = WorkoutSlotResponse.from(row);
@@ -51,5 +52,6 @@ class WorkoutSlotResponseTest {
         assertNull(response.exercise());
         assertEquals(3, response.sets());
         assertNull(response.targetWeightKg());
+        assertNull(response.why());
     }
 }
