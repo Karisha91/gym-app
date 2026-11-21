@@ -44,9 +44,6 @@ public class OpenAiWorkoutExplainer implements WorkoutExplainer {
                 .retrieve()
                 .body(String.class);
 
-        // --- TEMPORARY LOG LINE ---
-        log.info("OpenRouter raw reply: {}", rawResponse);
-        // --------------------------
 
         String aiContent = ChatResponseReader.extractContent(rawResponse);
 
