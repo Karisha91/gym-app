@@ -8,7 +8,7 @@ public class ChatRequestBuilder {
 
     private static final JsonMapper MAPPER = JsonMapper.builder().build();
 
-    private static final int MAX_TOKENS = 800;
+    private static final int MAX_TOKENS = 2000;
     private static final double TEMPERATURE = 0.3;
 
     private static final String SYSTEM_PROMPT = """
