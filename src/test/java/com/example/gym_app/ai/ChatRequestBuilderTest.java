@@ -50,7 +50,7 @@ class ChatRequestBuilderTest {
 
         assertEquals(MODEL, request.model());
         assertEquals("json_object", request.responseFormat().type());
-        assertEquals(800, request.maxTokens());
+        assertEquals(2000, request.maxTokens());
         assertEquals(0.3, request.temperature());
     }
 

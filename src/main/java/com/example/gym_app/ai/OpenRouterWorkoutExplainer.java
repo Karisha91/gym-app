@@ -9,14 +9,14 @@ import org.springframework.web.client.RestClient;
 
 @Component
 @Profile("openai")
-public class OpenAiWorkoutExplainer implements WorkoutExplainer {
+public class OpenRouterWorkoutExplainer implements WorkoutExplainer {
 
-    private static final Logger log = LoggerFactory.getLogger(OpenAiWorkoutExplainer.class);
+    private static final Logger log = LoggerFactory.getLogger(OpenRouterWorkoutExplainer.class);
 
     private final OpenRouterProperties properties;
     private final RestClient restClient;
 
-    public OpenAiWorkoutExplainer(OpenRouterProperties properties) {
+    public OpenRouterWorkoutExplainer(OpenRouterProperties properties) {
         this.properties = properties;
 
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
