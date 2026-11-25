@@ -7,7 +7,7 @@ type ExerciseCardProps = {
   minReps: number
   maxReps: number
   targetWeightKg: number | null
-  why: string
+  why: string | null
 }
 
 function formatLabel(value: string) {
@@ -73,9 +73,11 @@ export function ExerciseCard({
         </div>
       </div>
 
-      <p className="mt-5 border-l-2 border-accent/60 pl-3 text-sm leading-relaxed text-text/80">
-        {why}
-      </p>
+      {why && (
+        <p className="mt-5 border-l-2 border-accent/60 pl-3 text-sm leading-relaxed text-text/80">
+          {why}
+        </p>
+      )}
     </article>
   )
 }
